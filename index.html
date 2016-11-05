@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SwingChords</title>
+  <link rel="stylesheet" href="css/base.css">
+  <script type="text/javascript" src="js/base.js"></script>
+    <style type="text/css">
+      canvas { border: 1px solid #999; }
+    </style>
+  </head>
+  <body onload="draw();">
+
+  <canvas id="contents" width="1200" height="600"></canvas>
+
+  <form name="ChordForm">
+    <select name="ChordType">
+      <option value="">Maj</option>
+    </select>
+    <select name="RootKey">
+      <option value="">C</option>
+      <option value="">D♭</option>
+      <option value="">D</option>
+      <option value="">E♭</option>
+      <option value="">E</option>
+      <option value="">F</option>
+      <option value="">G♭</option>
+      <option value="">G</option>
+      <option value="">A♭</option>
+      <option value="">A</option>
+      <option value="">B♭</option>
+      <option value="">B</option>
+    </select>
+    <select name="Trans">
+      <option value="">0</option>
+      <option value="">1</option>
+      <option value="">2</option>
+      <option value="">3</option>
+      <option value="">4</option>
+    </select>
+    <input type="button" value="表示" onclick="changeChord()">
+  </form>
+
+
+  </body>
+  
+</body>
+</html>
