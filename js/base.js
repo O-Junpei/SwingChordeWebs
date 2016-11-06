@@ -9,6 +9,7 @@ var toneWidth = 0;
 var toneHeight = 0;
 var toneLeftPosX = 0;
 var tonePosYs = [];
+var scaleTonePos = []
 
 //音符用の加線
 var addLineWidth = 0;
@@ -31,6 +32,11 @@ var sharpLeftPosX = 0;
 var sharpRightPosX = 0;
 var sharpPosYs = [];
 
+
+//スケール関係
+
+
+//画像ぷりロード
 var testImg = new Image();
 testImg.src = "img/test.png"
 
@@ -105,6 +111,13 @@ function initSetting(){
         tonePosYs[34] = viewHeight*0.125
         tonePosYs[35] = viewHeight*0.125
 
+        //スケール用のポジションの指定
+        scaleTonePos[0] = viewWidth*0.43
+        scaleTonePos[1] = viewWidth*0.59
+        scaleTonePos[2] = viewWidth*0.75
+        scaleTonePos[3] = viewWidth*0.91
+
+
 
         //加線の
         addLineWidth = viewWidth*0.08
@@ -154,8 +167,9 @@ function initSetting(){
 
 
         showTone(35,0,0)
-
-
+        ctx.drawImage(wholeNoteImg, scaleTonePos[0], tonePosYs[14], toneWidth, toneHeight)
+        ctx.drawImage(wholeNoteImg, scaleTonePos[1], tonePosYs[14], toneWidth, toneHeight)
+        ctx.drawImage(wholeNoteImg, scaleTonePos[2], tonePosYs[14], toneWidth, toneHeight)
         //setMajorChord(26)
     }
 }
@@ -182,37 +196,16 @@ function showTone(toneNumber,isSharp,isRight){
     }
 }
 
+
 function setFlat(toneNumber){
     var canvas = document.getElementById('contents');
     if (canvas.getContext){
         ctx = canvas.getContext('2d');
 
-        if(toneNumber == 100){
+        //条件に合えば♭を表示する
+        if(toneNumber === 6 || toneNumber === 8 || toneNumber === 10 || toneNumber === 13 || toneNumber === 15 || toneNumber === 18 || toneNumber === 20 || toneNumber === 22 || toneNumber === 25 || toneNumber === 27 || toneNumber === 32 || toneNumber == 34){
 
-        }else if(toneNumber === 6) {
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[6], flatWidth, flatHeight)
-        }else if(toneNumber === 8) {
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[8], flatWidth, flatHeight)
-        }else if(toneNumber === 10) {
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[10], flatWidth, flatHeight)
-        }else if(toneNumber === 13) {
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[13], flatWidth, flatHeight)
-        }else if(toneNumber === 15){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[15], flatWidth, flatHeight)
-        }else if(toneNumber === 18){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[18], flatWidth, flatHeight)
-        }else if(toneNumber === 20){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[20], flatWidth, flatHeight)
-        }else if(toneNumber === 22){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[22], flatWidth, flatHeight)
-        }else if(toneNumber === 25){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[25], flatWidth, flatHeight)
-        }else if(toneNumber === 27){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[27], flatWidth, flatHeight)
-        }else if(toneNumber === 32){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[32], flatWidth, flatHeight)
-        }else if(toneNumber === 34){
-            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[34], flatWidth, flatHeight)
+            ctx.drawImage(flatImg, flatRightPosX, flatPosYs[toneNumber], flatWidth, flatHeight)
         }
     }
 }
@@ -222,24 +215,9 @@ function setSharp(toneNumber){
     if (canvas.getContext){
         ctx = canvas.getContext('2d');
         
-        if(toneNumber === 100){
-
-        }else if (toneNumber === 13) {
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[13], sharpWidth, sharpHeight)
-        }else if (toneNumber === 15) {
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[15], sharpWidth, sharpHeight)
-        }else if (toneNumber === 18) {
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[18], sharpWidth, sharpHeight)
-        }else if(toneNumber === 20){
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[20], sharpWidth, sharpHeight)
-        }else if(toneNumber === 25){
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[25], sharpWidth, sharpHeight)
-        }else if(toneNumber === 27){
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[27], sharpWidth, sharpHeight)
-        }else if(toneNumber === 30){
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[30], sharpWidth, sharpHeight)
-        }else if(toneNumber === 32){
-            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[32], sharpWidth, sharpHeight)
+        //条件に合えば♯を表示する
+        if(toneNumber === 13 || toneNumber === 15 || toneNumber === 18 || toneNumber === 20 || toneNumber === 25 || toneNumber === 27 || toneNumber === 30 || toneNumber === 32 ){
+            ctx.drawImage(sharpImg, sharpRightPosX, sharpPosYs[toneNumber], sharpWidth, sharpHeight)
         }
     }
 }
@@ -249,6 +227,7 @@ function setBaseAssets(){
     var canvas = document.getElementById('contents');
     if (canvas.getContext){
         ctx = canvas.getContext('2d');
+
 
         //線を引く
         ctx.fillRect(viewWidth*0.01, viewHeight*0.28, viewWidth*0.98, viewHeight*0.01);
@@ -295,11 +274,6 @@ function showAddLine(toneNumber){
         ctx.fillRect(addLineLeftPosX, addLineHighPosYs[0], addLineWidth, addLineHeight)
     }
 
-    /*
-    if (toneNumber === 27 || toneNumber === 28) {
-        ctx.fillRect(addLineLeftPosX, addLineHighPosYs[0], addLineWidth, addLineHeight)
-        ctx.fillRect(addLineLeftPosX, addLineHighPosYs[1], addLineWidth, addLineHeight)
-    }*/
 
     if(toneNumber === 12 || toneNumber === 11 || toneNumber === 10){
         ctx.fillRect(addLineLeftPosX, addLineUnderPosYs[0], addLineWidth, addLineHeight)
@@ -323,6 +297,11 @@ function setMajorChord(toneNumber,transNumber){
     var firstToneNumber = toneNumber;
     var secondToneNumber = firstToneNumber + 4;
     var thirdToneNumber = firstToneNumber + 7;
+
+    //スケール用の設定
+    ctx.drawImage(wholeNoteImg, scaleTonePos[0], tonePosYs[toneNumber], toneWidth, toneHeight)
+    ctx.drawImage(wholeNoteImg, scaleTonePos[1], tonePosYs[secondToneNumber], toneWidth, toneHeight)
+    ctx.drawImage(wholeNoteImg, scaleTonePos[2], tonePosYs[thirdToneNumber], toneWidth, toneHeight)
 
     //転調用メソッド
     if (transNumber == 1) {
@@ -458,5 +437,4 @@ function setMajorChord(toneNumber,transNumber){
         showTone(secondToneNumber,1,0)
         showTone(thirdToneNumber,0,0)
     }
-
 }
