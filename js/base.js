@@ -175,23 +175,23 @@ function initSetting(){
 }
 
 
-function showTone(toneNumber,isSharp,isRight){
+function showTone(toneNumber,isSharp,isRight, xPos){
     var canvas = document.getElementById('contents');
     if (canvas.getContext){
 
         if (isSharp === 1) {
             //音符を追加する
-            ctx.drawImage(wholeNoteImg, toneLeftPosX, tonePosYs[toneNumber-1], toneWidth, toneHeight)
+            ctx.drawImage(wholeNoteImg, xPos, tonePosYs[toneNumber-1], toneWidth, toneHeight)
             setSharp(toneNumber)
         }else{
             //音符を追加する
-            ctx.drawImage(wholeNoteImg, toneLeftPosX, tonePosYs[toneNumber], toneWidth, toneHeight)
+            ctx.drawImage(wholeNoteImg, xPos, tonePosYs[toneNumber], toneWidth, toneHeight)
                 //記号類を表示する
             setFlat(toneNumber)
         }
 
         //下線を表示する
-        showAddLine(toneNumber)
+        showAddLine(toneNumber,xPos)
 
     }
 }
@@ -265,7 +265,7 @@ function clearAll(){
     }
 }
 
-function showAddLine(toneNumber){
+function showAddLine(toneNumber,xPos){
 
     if (toneNumber === 32 || toneNumber === 33) {
         ctx.fillRect(addLineLeftPosX, addLineHighPosYs[0], addLineWidth, addLineHeight)
@@ -316,125 +316,125 @@ function setMajorChord(toneNumber,transNumber){
 
     }else if (toneNumber === 5) {
         //F
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if (toneNumber === 6) {
         //G♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if (toneNumber === 7) {
         //G
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if (toneNumber === 8) {
         //A♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if (toneNumber === 9) {
         //A
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if (toneNumber === 10) {
         //B♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if (toneNumber === 11) {
         //B
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,1,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,1,0,toneLeftPosX)
     }else if (toneNumber === 12) {
         //C
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 13){
         //C♯,D♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 14){
         //D
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 15){
         //E♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 16){
         //E
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 17){
         //F
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
 
     }else if(toneNumber === 18){
         //G♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
 
     }else if(toneNumber === 19){
         //G
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 20){
         //A♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 21){
         //A
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 22){
         //B♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 23){
         //B
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,1,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,1,0,toneLeftPosX)
     }else if(toneNumber === 24){
         //C
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 25){
         //D♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 26){
         //D
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 27){
         //E♭
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,0,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }else if(toneNumber === 28){
         //E
-        showTone(firstToneNumber,0,0)
-        showTone(secondToneNumber,1,0)
-        showTone(thirdToneNumber,0,0)
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
     }
 }
