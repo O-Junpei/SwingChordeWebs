@@ -16,9 +16,13 @@ var addLineWidth = 0;
 var addLineHeight = 0;
 var addLineLeftPosX = 0
 var addLineUnderPosYs = [];
-var addLineHighPosYs = [];
+var addLineHighPosYs = []
+//右と左の音符の差
+var leftToneAndRightToneDifference
+
 //音符位置と加線の差
 var toneAndAddLineDifference
+
 
 
 //♭のサイズ、位置
@@ -59,12 +63,42 @@ flatImg.src = "img/flat.png"
 var sharpImg = new Image();
 sharpImg.src = "img/sharp.png"
 
+
+//htmlの[表示]ボタンが押されたら呼ばれる
+function changeChord(){
+
+    clearAll()
+    setBaseAssets()
+
+    //Rootの情報を取得
+    var toneNumber = document.ChordForm.RootKey.selectedIndex
+
+    if (toneNumber > 7) {
+        toneNumber = toneNumber - 12
+    }
+
+    //移調の度合いを取得
+    var transNumber = document.ChordForm.Trans.selectedIndex
+
+    //コードのタイプを取得
+    var chordType = document.ChordForm.ChordType.selectedIndex
+
+    if (chordType == 0) {
+        //メジャーコード
+        setMajorChord(toneNumber+12, transNumber)
+    }else if(chordType == 1){
+        //メジャー7thコード
+        setMajorSevenChord(toneNumber+12, transNumber)
+    }
+}
+
+//初期設定をまとめて実行する
 function draw(){
     initSetting()
     setBaseAssets()
 }
 
-
+//初期設定を行う
 function initSetting(){
     var canvas = document.getElementById('contents');
     if (canvas.getContext){
@@ -78,6 +112,9 @@ function initSetting(){
         toneWidth = viewWidth*0.04*1.436;
         toneHeight = viewHeight*0.08;
         toneLeftPosX = viewWidth*0.25
+
+        //左の音符と右にずれた音符の差
+        leftToneAndRightToneDifference = toneWidth*0.7
 
         //ポジションたち
         tonePosYs[0] = 0;
@@ -175,24 +212,50 @@ function initSetting(){
     }
 }
 
+//基礎的な五線などを書く
+function setBaseAssets(){
+    var canvas = document.getElementById('contents');
+    if (canvas.getContext){
+        ctx = canvas.getContext('2d');
+
+        //線を引く
+        ctx.fillRect(viewWidth*0.01, viewHeight*0.28, viewWidth*0.98, viewHeight*0.01);
+        ctx.fillRect(viewWidth*0.01, viewHeight*0.36, viewWidth*0.98, viewHeight*0.01);
+        ctx.fillRect(viewWidth*0.01, viewHeight*0.44, viewWidth*0.98, viewHeight*0.01);
+        ctx.fillRect(viewWidth*0.01, viewHeight*0.52, viewWidth*0.98, viewHeight*0.01);
+        ctx.fillRect(viewWidth*0.01, viewHeight*0.60, viewWidth*0.98, viewHeight*0.01);
+        //ctx.drawImage(testImg, 0, 0, viewWidth, viewHeight);
+
+        //ト音記号
+        ctx.drawImage(gClefImg, viewWidth*0.02, viewHeight*0.17, viewWidth*0.09, viewHeight*0.57);    
+    }
+}
 
 function showTone(toneNumber,isSharp,isRight, xPos){
     var canvas = document.getElementById('contents');
     if (canvas.getContext){
 
+        var correctedXPosition = xPos
+
+        //右の場合は右に少しずらす
+        if (isRight == 1) {
+            correctedXPosition = correctedXPosition + leftToneAndRightToneDifference
+        }
+
+        //シャープの場合は音符を一つ下げる
         if (isSharp === 1) {
             //音符を追加する
-            ctx.drawImage(wholeNoteImg, xPos, tonePosYs[toneNumber-1], toneWidth, toneHeight)
+            ctx.drawImage(wholeNoteImg, correctedXPosition, tonePosYs[toneNumber-1], toneWidth, toneHeight)
             setSharp(toneNumber,xPos-toneAndSharpDifference)
         }else{
             //音符を追加する
-            ctx.drawImage(wholeNoteImg, xPos, tonePosYs[toneNumber], toneWidth, toneHeight)
+            ctx.drawImage(wholeNoteImg, correctedXPosition, tonePosYs[toneNumber], toneWidth, toneHeight)
                 //記号類を表示する
-            setFlat(toneNumber,xPos-toneAndFlatDifference)
+            setFlat(toneNumber,correctedXPosition-toneAndFlatDifference)
         }
 
         //下線を表示する
-        showAddLine(toneNumber,xPos-toneAndAddLineDifference)
+        showAddLine(toneNumber,correctedXPosition-toneAndAddLineDifference)
     }
 }
 
@@ -220,49 +283,6 @@ function setSharp(toneNumber, xPos){
             ctx.drawImage(sharpImg, xPos, sharpPosYs[toneNumber], sharpWidth, sharpHeight)
         }
     }
-}
-
-
-function setBaseAssets(){
-    var canvas = document.getElementById('contents');
-    if (canvas.getContext){
-        ctx = canvas.getContext('2d');
-
-
-        //線を引く
-        ctx.fillRect(viewWidth*0.01, viewHeight*0.28, viewWidth*0.98, viewHeight*0.01);
-        ctx.fillRect(viewWidth*0.01, viewHeight*0.36, viewWidth*0.98, viewHeight*0.01);
-        ctx.fillRect(viewWidth*0.01, viewHeight*0.44, viewWidth*0.98, viewHeight*0.01);
-        ctx.fillRect(viewWidth*0.01, viewHeight*0.52, viewWidth*0.98, viewHeight*0.01);
-        ctx.fillRect(viewWidth*0.01, viewHeight*0.60, viewWidth*0.98, viewHeight*0.01);
-        //ctx.drawImage(testImg, 0, 0, viewWidth, viewHeight);
-
-        //ト音記号
-        ctx.drawImage(gClefImg, viewWidth*0.02, viewHeight*0.17, viewWidth*0.09, viewHeight*0.57);    
-    }
-}
-
-
-function changeChord(){
-    clearAll()
-    setBaseAssets()
-    var toneNumber = document.ChordForm.RootKey.selectedIndex
-
-    if (toneNumber > 7) {
-        toneNumber = toneNumber - 12
-    }
-
-    var transNumber = document.ChordForm.Trans.selectedIndex
-
-
-
-    var chordType = document.ChordForm.ChordType.selectedIndex
-
-    if (chordType == 0) {
-        //メジャーコード
-        setMajorChord(toneNumber+12, transNumber)
-    }
-
 }
 
 
@@ -300,7 +320,7 @@ function showAddLine(toneNumber,xPos){
 }
 
 
-
+//メジャーコード用の関数
 function setMajorChord(toneNumber,transNumber){
 
     var firstToneNumber = toneNumber;
@@ -588,3 +608,348 @@ function setMajorChord(toneNumber,transNumber){
 
     }
 }
+
+
+//メジャーセブンの関数
+function setMajorSevenChord(toneNumber,transNumber){
+
+    var firstToneNumber = toneNumber;
+    var secondToneNumber = firstToneNumber + 4;
+    var thirdToneNumber = firstToneNumber + 7;
+    var forthToneNumber = firstToneNumber + 11;
+
+    //展開用メソッド
+    if (transNumber == 1) {
+        firstToneNumber = firstToneNumber + 12
+    }else if (transNumber == 2) {
+        firstToneNumber = firstToneNumber + 12
+        secondToneNumber = secondToneNumber + 12
+    }else if (transNumber == 3) {
+        firstToneNumber = firstToneNumber + 12
+        secondToneNumber = secondToneNumber + 12
+        thirdToneNumber = thirdToneNumber + 12
+    }
+
+    //アルペジオようメソッド
+    var changePosNumber = transNumber % 4
+    changePosNumber = changePosNumber * 2
+
+    if(toneNumber == 0){
+
+    }else if (toneNumber === 5) {
+        //F
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 6) {
+        //G♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 7) {
+        //G
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 8) {
+        //A♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 9) {
+        //A
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 10) {
+        //B♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 11) {
+        //B
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,1,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,1,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if (toneNumber === 12) {
+
+        //C
+        //基本形
+        if (transNumber == 0) {
+            //コード部分
+            showTone(firstToneNumber,0,0,toneLeftPosX)
+            showTone(secondToneNumber,0,0,toneLeftPosX)
+            showTone(thirdToneNumber,0,0,toneLeftPosX)
+            showTone(forthToneNumber,0,0,toneLeftPosX)
+
+            //スケール用
+            showTone(firstToneNumber,0,0,scaleTonePos[0])
+            showTone(secondToneNumber,0,0,scaleTonePos[1])
+            showTone(thirdToneNumber,0,0,scaleTonePos[2])
+            showTone(forthToneNumber,0,0,scaleTonePos[3])
+
+        }else if(transNumber == 1){
+            //コード部分
+            showTone(secondToneNumber,0,0,toneLeftPosX)
+            showTone(thirdToneNumber,0,0,toneLeftPosX)
+            showTone(forthToneNumber,0,0,toneLeftPosX)
+            showTone(firstToneNumber,0,1,toneLeftPosX)
+
+            //スケール用
+            showTone(secondToneNumber,0,0,scaleTonePos[0])
+            showTone(thirdToneNumber,0,0,scaleTonePos[1])
+            showTone(forthToneNumber,0,0,scaleTonePos[2])
+            showTone(firstToneNumber,0,0,scaleTonePos[3])
+
+        }else if(transNumber == 2){
+            //コード部分
+            showTone(thirdToneNumber,0,0,toneLeftPosX)
+            showTone(forthToneNumber,0,0,toneLeftPosX)
+            showTone(firstToneNumber,0,1,toneLeftPosX)
+            showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+            //スケール用
+            showTone(thirdToneNumber,0,0,scaleTonePos[1])
+            showTone(forthToneNumber,0,0,scaleTonePos[2])
+            showTone(firstToneNumber,0,0,scaleTonePos[3])
+            showTone(secondToneNumber,0,0,scaleTonePos[0])
+
+        }else if(transNumber == 3){
+            //コード部分
+            showTone(firstToneNumber,0,1,toneLeftPosX)
+            showTone(secondToneNumber,0,0,toneLeftPosX)
+            showTone(thirdToneNumber,0,0,toneLeftPosX)
+            showTone(forthToneNumber,0,0,toneLeftPosX)
+
+            //スケール用
+            showTone(forthToneNumber,0,0,scaleTonePos[2])
+            showTone(firstToneNumber,0,0,scaleTonePos[3])
+            showTone(secondToneNumber,0,0,scaleTonePos[0])
+            showTone(thirdToneNumber,0,0,scaleTonePos[1])
+
+        }
+
+
+
+
+
+    }else if(toneNumber === 13){
+        //C♯,D♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 14){
+        //D
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+    }else if(toneNumber === 15){
+        //E♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 16){
+        //E
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 17){
+        //F
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 18){
+        //G♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 19){
+        //G
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 20){
+        //A♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 21){
+        //A
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 22){
+        //B♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 23){
+        //B
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,1,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,1,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 24){
+        //C
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 25){
+        //D♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 26){
+        //D
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 27){
+        //E♭
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,0,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,0,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }else if(toneNumber === 28){
+        //E
+        showTone(firstToneNumber,0,0,toneLeftPosX)
+        showTone(secondToneNumber,1,0,toneLeftPosX)
+        showTone(thirdToneNumber,0,0,toneLeftPosX)
+
+        //スケール用
+        showTone(firstToneNumber,0,0,scaleTonePos[(0+changePosNumber)%3])
+        showTone(secondToneNumber,1,0,scaleTonePos[(1+changePosNumber)%3])
+        showTone(thirdToneNumber,0,0,scaleTonePos[(2+changePosNumber)%3])
+
+    }
+}
+
